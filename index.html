@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 指令台 — 100 組工作用 Prompt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Noto Sans TC",-apple-system,BlinkMacSystemFont,"Microsoft JhengHei",sans-serif;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:#0f1117;
+  color:#f0f0f0;
+  padding:24px 20px;
+}
+.wrap{max-width:480px;width:100%;text-align:center}
+.mono{font-family:"IBM Plex Mono",monospace}
+.slash{color:#38bdf8}
+h1{font-size:clamp(28px,7vw,44px);font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:12px}
+.sub{font-size:15px;color:#94a3b8;margin-bottom:40px;line-height:1.6}
+.cards{display:flex;flex-direction:column;gap:14px}
+a.card{
+  display:block;text-decoration:none;border-radius:6px;padding:22px 24px;
+  text-align:left;transition:transform .15s,box-shadow .15s;
+}
+a.card:hover{transform:translateY(-2px)}
+.card-light{
+  background:#ffffff;color:#11222e;
+  border:1px solid #c6d2da;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.card-dark{
+  background:#18181b;color:#f4f4f5;
+  border:1px solid #3f3f46;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+.badge{
+  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;
+  margin-bottom:10px;
+}
+.badge-light{background:#e2f0f5;color:#0c6b8a}
+.badge-dark{background:#27272a;color:#a1a1aa}
+.card-title{font-size:19px;font-weight:700;margin-bottom:4px}
+.card-desc{font-size:13px;opacity:.65;line-height:1.5}
+.arrow{float:right;opacity:.4;font-size:20px;margin-top:2px}
+footer{margin-top:36px;font-size:12px;color:#475569}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="mono" style="font-size:11px;letter-spacing:.2em;color:#38bdf8;text-transform:uppercase;margin-bottom:14px">Prompt Deck / 100 commands</p>
+  <h1><span class="slash mono">/</span>AI 指令台</h1>
+  <p class="sub">100 組工作場景指令，每組都有可直接使用的完整 Prompt。<br>選一個版本開始：</p>
+
+  <div class="cards">
+    <a class="card card-light" href="ai-prompt-deck.html">
+      <span class="arrow">→</span>
+      <span class="badge badge-light">Light</span>
+      <div class="card-title">淺色版</div>
+      <div class="card-desc">簡潔白底設計，適合白天使用</div>
+    </a>
+    <a class="card card-dark" href="Ai-100-Commands-Toolbox.html">
+      <span class="arrow" style="color:#f4f4f5">→</span>
+      <span class="badge badge-dark">Dark</span>
+      <div class="card-title">深色版</div>
+      <div class="card-desc">護眼深色設計，適合夜間或 OLED 螢幕</div>
+    </a>
+  </div>
+
+  <footer>rita112025-cpu · AI 指令台 · 100 prompts</footer>
+</div>
+</body>
+</html>
