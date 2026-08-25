@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 指令台 — 100 組工作用 Prompt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E7ECEF;
+  --surface:#FFFFFF;
+  --ink:#11222E;
+  --muted:#64798A;
+  --line:#C6D2DA;
+  --line-soft:#DDE5EA;
+  --accent:#0C6B8A;
+  --accent-wash:#E2F0F5;
+  --ok:#1D6B4C;
+  --warn:#8A5A0C;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Noto Sans TC",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(rgba(12,107,138,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12,107,138,.055) 1px, transparent 1px);
+  background-size:28px 28px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+header{padding:56px 0 28px}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 14px;
+}
+h1{
+  font-size:clamp(30px,6vw,52px);font-weight:900;letter-spacing:-.02em;
+  line-height:1.1;margin:0 0 16px;
+}
+h1 .slash{font-family:var(--mono);font-weight:500;color:var(--accent)}
+.lede{max-width:62ch;font-size:16px;color:#33485A;margin:0 0 22px}
+
+.note{
+  border-left:3px solid var(--accent);
+  background:rgba(255,255,255,.72);
+  padding:14px 16px;max-width:70ch;font-size:14px;color:#33485A;
+  margin:0 0 8px;
+}
+.note b{color:var(--ink)}
+.note + .note{margin-top:10px;border-left-color:#D2A24C}
+
+/* ---------- command bar ---------- */
+.bar-dock{position:sticky;top:0;z-index:20;padding:14px 0 12px;
+  background:linear-gradient(var(--paper) 78%, rgba(231,236,239,0));}
+.bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:2px;padding:0 14px;height:54px;
+  box-shadow:0 2px 0 rgba(17,34,46,.06);
+}
+.bar:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-wash)}
+.bar .prompt-mark{font-family:var(--mono);color:var(--accent);font-size:18px;font-weight:600}
+.bar input{
+  flex:1;border:0;outline:0;font-family:var(--mono);font-size:16px;
+  color:var(--ink);background:transparent;min-width:0;
+}
+.bar input::placeholder{color:#9AAEBC}
+.bar .count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.hint{font-family:var(--mono);font-size:11px;color:var(--muted);margin:8px 2px 0}
+kbd{
+  font-family:var(--mono);font-size:10px;border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:3px;padding:1px 5px;background:#fff;color:var(--ink);
+}
+
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 34px}
+.chip{
+  font-family:var(--mono);font-size:12px;padding:6px 11px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:#41586A;border-radius:2px;
+  transition:background .12s,color .12s,border-color .12s;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* ---------- sections ---------- */
+section{margin:0 0 44px;scroll-margin-top:96px}
+.sec-head{display:flex;align-items:baseline;gap:12px;
+  border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:18px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+.sec-title{font-size:19px;font-weight:700;margin:0}
+.sec-count{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+
+/* ---------- card ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--line-soft);border-radius:2px;
+  padding:16px 16px 14px;display:flex;flex-direction:column;
+  transition:border-color .12s,transform .12s;
+}
+.card:hover{border-color:var(--line);transform:translateY(-1px)}
+.card-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.cmd{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink)}
+.cmd .s{color:var(--accent)}
+.desc{font-size:13px;color:var(--muted)}
+.rule{height:1px;background:var(--line-soft);margin:10px 0 12px}
+pre{
+  font-family:var(--mono);font-size:12.5px;line-height:1.72;
+  white-space:pre-wrap;word-break:break-word;margin:0 0 14px;
+  color:#2A3E4D;background:#F6F9FA;border:1px solid var(--line-soft);
+  padding:12px;border-radius:2px;flex:1;max-height:none;
+}
+pre .ph{background:#FFF2D6;color:#6B4A08;padding:0 2px;border-radius:2px}
+.copy{
+  align-self:flex-start;font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  border:1px solid var(--ink);background:var(--ink);color:#fff;
+  padding:7px 16px;border-radius:2px;cursor:pointer;transition:background .12s,border-color .12s;
+}
+.copy:hover{background:var(--accent);border-color:var(--accent)}
+.copy.done{background:var(--ok);border-color:var(--ok)}
+.copy.fail{background:#8A2B2B;border-color:#8A2B2B}
+.card.flag{border-color:#E0C48A;background:#FFFCF5}
+.flag-tag{font-family:var(--mono);font-size:10px;color:var(--warn);
+  border:1px solid #E0C48A;padding:1px 6px;border-radius:2px}
+
+.empty{display:none;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty.on{display:block}
+.empty p{font-family:var(--mono);font-size:14px}
+
+footer{border-top:1px solid var(--line);padding:26px 0 60px;margin-top:20px;
+  font-size:13px;color:var(--muted);max-width:70ch}
+footer b{color:var(--ink)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Prompt Deck / 100 commands</p>
+  <h1><span class="slash">/</span>AI 指令台</h1>
+  <p class="lede">100 組工作場景的指令。每一組都已經展開成可直接執行的完整 prompt，按「複製」貼進 AI 對話框，把 <span style="background:#FFF2D6;padding:0 3px">【填寫】</span> 和 <span style="background:#FFF2D6;padding:0 3px">【貼上】</span> 換成你自己的內容就能用。</p>
+
+  <div class="note">
+    <b>資料來源說明。</b>指令名稱與一句話說明，來自你提供的「100 個 AI 職場神指令清單」原檔。下方每組的 prompt 內文<b>不在原檔中</b>，是我依照該指令名稱撰寫的預設版本，未經實測驗證，請依實際情況調整。
+  </div>
+  <div class="note">
+    <b>已知重複。</b>原清單中 <code style="font-family:var(--mono)">/pros_cons</code>（第 25 項）與 <code style="font-family:var(--mono)">/pros_and_cons</code>（第 83 項）功能重疊，兩者皆保留並已標記。
+  </div>
+</header>
+
+<div class="bar-dock">
+  <div class="bar">
+    <span class="prompt-mark">/</span>
+    <input id="q" type="search" placeholder="輸入指令或關鍵字，例如：報價、risk、週報" autocomplete="off" aria-label="搜尋指令">
+    <span class="count" id="count">100 / 100</span>
+  </div>
+  <p class="hint">按 <kbd>/</kbd> 跳到搜尋框　·　<kbd>Esc</kbd> 清除</p>
+</div>
+
+<div class="chips" id="chips"></div>
+
+<main id="list"></main>
+
+<div class="empty" id="empty"><p>沒有符合的指令。換個關鍵字，或按 Esc 清除。</p></div>
+
+<footer>
+  <b>使用建議。</b>不必一次全用。先挑手上工作真的會遇到的 5–10 組，實際跑過一次、依結果修改 prompt 內容，再固定下來。指令名稱只是索引，實際效果取決於你補進去的資料是否具體。
+</footer>
+
+</div>
+
+<script>
+const DATA = [
+{g:"會議與文書速記",items:[
+{c:"minutes",d:"逐字稿轉會議紀錄",p:"把以下逐字稿整理成會議紀錄。\n輸出四個區塊：出席者、討論議題、決議事項、待辦（含負責人與期限）。\n逐字稿沒有提到的資訊一律寫「未提及」，不要自行推測或補寫。\n\n逐字稿：\n【貼上】"},
+{c:"action",d:"提取個人待辦事項",p:"從以下內容找出所有指派給我的待辦事項。\n以表格輸出：事項、期限、依賴對象、目前狀態。\n沒有明確期限就寫「未指定」。不要把討論中的想法當成已確認的待辦。\n\n內容：\n【貼上】"},
+{c:"agenda",d:"自動生成會議流程",p:"幫我產出會議議程。\n會議主題：【填寫】\n與會者：【填寫】\n總時長：【填寫】分鐘\n輸出：每個段落的時間分配、負責人、預期產出。最後列出需要事前準備的資料。"},
+{c:"TLDR",d:"長文秒變三點摘要",p:"用三點摘要以下內容，每點不超過 30 字。\n只使用原文出現過的資訊，不要加入外部知識。\n\n內容：\n【貼上】"},
+{c:"keypoints",d:"擷取文章核心金句",p:"從以下文章擷取核心論點。\n輸出 5–8 條，每條標明原文出處（段落或小標）。\n區分「作者主張」與「作者引用他人說法」。\n\n文章：\n【貼上】"},
+{c:"glossary",d:"整理專有名詞對照",p:"整理以下內容出現的專有名詞。\n表格欄位：原文用詞、中文、一句話解釋、文中出現位置。\n文中沒有定義的詞，在解釋欄標註「文中未定義，以下為通用解釋」。\n\n內容：\n【貼上】"},
+{c:"table",d:"轉為結構化表格",p:"把以下非結構化內容轉成表格。\n先告訴我你打算用哪些欄位，再輸出表格。\n原文缺漏的儲存格填「—」，不要填入猜測值。\n\n內容：\n【貼上】"},
+{c:"checklist",d:"產出工作執行清單",p:"把以下工作內容轉成可執行清單。\n每項寫成「動詞＋對象＋完成判準」。\n依先後順序排列，並標出哪幾項有前置依賴。\n\n內容：\n【貼上】"},
+{c:"mindmap",d:"生成樹狀思考架構",p:"把以下內容整理成樹狀架構，最多三層。\n用 Markdown 縮排清單輸出，另外附一份 Mermaid mindmap 語法。\n\n內容：\n【貼上】"},
+{c:"nofluff",d:"去除廢話直給重點",p:"重寫以下文字，刪掉客套、鋪陳與重複，只留可執行資訊與具體數字。\n保留原意，不要新增內容。字數目標：原文的 40% 以下。\n\n原文：\n【貼上】"}
+]},
+{g:"電子郵件與溝通",items:[
+{c:"email_reply",d:"生成得體商務回信",p:"幫我回覆以下郵件。\n我的立場與想表達的：【填寫】\n語氣：正式但不生硬。\n輸出主旨＋內文。需要對方回覆的事項用條列標清楚，並註明期限。\n\n來信：\n【貼上】"},
+{c:"email_sales",d:"寫出高開信率開發信",p:"寫一封開發信。\n收件對象：【填寫】\n我的產品或服務：【填寫】\n已知對方的痛點：【填寫】\n限制：主旨 20 字內、內文 150 字內、只放一個行動呼籲。不要編造對方公司的資訊。"},
+{c:"soften",d:"修飾口氣為溫和委婉",p:"把以下文字改寫得溫和委婉，但保留原本的要求與期限，不要弱化重點。\n輸出改寫版本，並列出你改動的三個地方與原因。\n\n原文：\n【貼上】"},
+{c:"formal",d:"語氣轉為正式專業",p:"把以下文字轉成正式商務書面語。\n移除口語與表情符號，保留所有數字與日期不變。\n\n原文：\n【貼上】"},
+{c:"de_jargon",d:"將專業術語白話化",p:"把以下內容改寫成非專業人士能懂的版本。\n每個專有名詞第一次出現時用括號補一句白話解釋。\n不要為了簡化而改變技術上的正確性；若某處無法簡化，直接說明原因。\n\n內容：\n【貼上】"},
+{c:"translate_pro",d:"信件專業雙語對照",p:"把以下郵件翻譯成【填寫目標語言】。\n輸出段落對照：原文／譯文。\n專有名詞、金額、日期、型號保持原樣並在譯文中標註。\n\n郵件：\n【貼上】"},
+{c:"apology",d:"撰寫客套道歉致歉信",p:"撰寫一封致歉信。\n事由：【填寫】\n影響範圍：【填寫】\n已採取的補救措施：【填寫】\n結構：承認事實、說明影響、補救做法、後續預防。不要推責，也不要承諾我沒有提供的補償。"},
+{c:"followup",d:"產出專案催促跟進信",p:"寫一封跟進信。\n事項：【填寫】\n上次聯絡時間：【填寫】\n原訂期限：【填寫】\n語氣禮貌但明確。要求對方在指定日期前回覆具體進度，並提供兩個可選的下一步。"},
+{c:"decline",d:"禮貌婉拒邀約或需求",p:"幫我婉拒以下邀約或需求。\n可對外說的理由：【填寫】\n是否保留未來合作可能：【填寫】\n限制：不編造理由、不過度道歉、全文 120 字內。\n\n對方來訊：\n【貼上】"},
+{c:"summary_mail",d:"長郵件擷取關鍵重點",p:"摘要以下郵件串。\n輸出：目前結論、尚未解決的爭點、每個人負責的事項、需要我做的決定。\n依時間順序標出關鍵訊息的日期。\n\n郵件串：\n【貼上】"}
+]},
+{g:"主報與簡報撰寫",items:[
+{c:"exec_summary",d:"生成主管偏好簡報",p:"把以下內容濃縮成給主管看的摘要。\n結構：結論先行（一句）、三個支撐重點、需要主管決策的事項、風險。\n全文 300 字內。所有數字必須來自原文，沒有的標「原文未提供」。\n\n內容：\n【貼上】"},
+{c:"deck_outline",d:"一鍵產出簡報大綱",p:"為以下主題產出簡報大綱。\n主題：【填寫】｜對象：【填寫】｜時長：【填寫】分鐘\n輸出表格：頁碼、標題、這頁要傳達的一句話、需要的素材或數據。\n標出哪幾頁需要我提供實際資料。"},
+{c:"speech_draft",d:"寫三分鐘致詞講稿",p:"寫一份三分鐘致詞稿（約 450 字）。\n場合：【填寫】｜聽眾：【填寫】｜核心訊息：【填寫】\n不要使用空泛的勵志語句，不要編造我沒提供的事蹟或數字。"},
+{c:"data_insight",d:"分析數據異常趨勢",p:"分析以下數據，找出異常與趨勢。\n輸出：觀察到的變化（附數值）、可能原因（標為推測）、需要哪些額外資料才能確認。\n資料不足時不要斷定因果。\n\n數據：\n【貼上】"},
+{c:"pros_cons",d:"分析方案優缺風險",p:"分析以下方案的優點、缺點與風險。\n方案：【填寫】｜評估情境：【填寫】\n輸出表格：面向、優點、缺點、風險程度（高/中/低）、判斷依據。\n最後說明哪些欄位是推測、需要什麼資料才能確認。",flag:"與 /pros_and_cons 重疊"},
+{c:"pitch",d:"三分鐘提案重點摘要",p:"把以下內容整理成三分鐘提案。\n結構：問題、現況成本、方案、可量化效益、所需資源、決策時點。\n效益數字只能用我提供的資料，沒有的地方寫「待估算」。\n\n內容：\n【貼上】"},
+{c:"report_weekly",d:"自動生成週報內容",p:"產出本週工作週報。\n本週完成：【填寫】｜遇到的問題：【填寫】｜下週計畫：【填寫】\n輸出：完成事項（含具體產出）、進行中（含完成度依據）、卡關與需要的協助、下週重點。\n不要把「進行中」寫成「已完成」。"},
+{c:"report_monthly",d:"彙整月報成果績效",p:"彙整月報。\n本月各項工作與結果：【貼上】\n輸出：目標達成情形（逐項對照）、關鍵數據變化、未達成項目與原因、下月調整。\n數字全部引用我提供的資料，不足處標「無資料」。"},
+{c:"kpi_check",d:"評估目標達成進度",p:"評估以下目標的達成進度。\n目標與現況數據：【貼上】\n輸出表格：指標、目標值、目前值、達成率、剩餘天數、以目前速度是否可能達標。\n達成率請列出計算式。"},
+{c:"comparison",d:"製作競品對比分析",p:"製作競品對比分析。\n比較對象：【填寫】｜比較面向：【填寫】\n輸出表格，每格標註資料來源。查不到的欄位寫「查無公開資料」，不要以推測填滿表格。"}
+]},
+{g:"行銷與社群文案",items:[
+{c:"threads_hook",d:"生成爆款文案開頭",p:"為以下主題寫 10 個社群貼文開頭，各 30 字內。\n主題：【填寫】｜平台：【填寫】｜受眾：【填寫】\n每個開頭標明使用的手法（提問、反差、數據、故事、衝突）。不要使用未經證實的數字。"},
+{c:"storytell",d:"將觀點轉故事文案",p:"把以下觀點改寫成故事型文案。\n觀點：【填寫】｜可使用的真實素材：【填寫】\n限制：只能使用我提供的素材，不得虛構人物、對話或事件。缺素材處標示「需補素材」。"},
+{c:"viral_title",d:"給十個高點擊標題",p:"為以下內容產出 10 個標題。\n每個標題標註訴求類型與適用平台。標題內容必須與原文相符，不得誇大原文沒有的效果。\n\n內容：\n【貼上】"},
+{c:"cta",d:"產出自然導流結尾",p:"為以下文案寫 5 個結尾行動呼籲。\n希望讀者做的動作：【填寫】\n每個版本標明語氣強度（低/中/高）與適用情境。\n\n文案：\n【貼上】"},
+{c:"slogan",d:"生成品牌標語口號",p:"為以下品牌產出 10 個標語。\n品牌或產品：【填寫】｜核心價值：【填寫】｜受眾：【填寫】\n每個標語 15 字內，標註主打訴求。不要使用需要實證的宣稱（第一、最強、唯一）。"},
+{c:"ad_copy",d:"撰寫高轉換廣告文",p:"撰寫廣告文案。\n產品：【填寫】｜受眾：【填寫】｜平台與字數限制：【填寫】｜可使用的實證數據：【填寫】\n輸出三個版本（理性／情感／急迫），並標出各自風險，包含是否可能觸及廣告法規。"},
+{c:"seo_keywords",d:"列出關鍵字優化建議",p:"為以下主題列出關鍵字建議。\n主題：【填寫】｜目標讀者：【填寫】\n輸出表格：關鍵字、搜尋意圖類型、建議放置位置。\n你無法取得實際搜尋量，請標明哪些欄位需要用關鍵字工具驗證。"},
+{c:"persona",d:"擬定目標客群輪廓",p:"擬定目標客群輪廓。\n產品或服務：【填寫】｜已知的客戶資料：【填寫】\n輸出 2–3 個 persona：使用情境、決策時在意的條件、常用資訊管道、拒絕購買的理由。\n所有推論標為推測並說明依據。"},
+{c:"post_calendar",d:"排定社群貼文日曆",p:"排一個月的社群貼文日曆。\n平台：【填寫】｜每週發文數：【填寫】｜主題方向：【填寫】\n輸出表格：日期、主題、貼文類型、素材需求。標出需要提前準備的項目。"},
+{c:"press_release",d:"撰寫標準新聞稿件",p:"撰寫新聞稿。\n事件：【填寫】｜時間地點：【填寫】｜關鍵人物與職稱：【填寫】｜可引用的說法：【填寫】\n結構：標題、導言（5W1H）、正文、公司簡介、聯絡窗口。\n不得虛構引言、數據或第三方評價。"}
+]},
+{g:"企劃與專案管理",items:[
+{c:"gantt",d:"生成專案時程表構想",p:"為以下專案規劃時程。\n專案：【填寫】｜起訖日：【填寫】｜已知里程碑：【填寫】\n輸出表格（工作項、起訖、負責人、前置作業），並附一份 Mermaid gantt 語法。\n工期若為估算請標示「估算值」。"},
+{c:"wbs",d:"分解專案工作項目",p:"把以下專案分解成工作項目。\n專案目標與範圍：【填寫】\n分解到第三層，每個末端項目要能在 5 天內完成並有明確驗收標準。\n輸出縮排清單，最後列出範圍外（不做）的項目。"},
+{c:"risk_assess",d:"列出潛在專案風險",p:"列出以下專案的潛在風險。\n輸出表格：風險、觸發條件、影響程度、可能性、預警訊號、應對措施、負責人。\n可能性與影響程度請說明判斷依據，不要只給等級。\n\n專案說明：\n【貼上】"},
+{c:"swot",d:"一鍵產出 SWOT 分析",p:"為以下對象做 SWOT 分析。\n每一格至少三項，每項附上依據來源。\n沒有資料支持的項目放在另一區「待查證」，不要混入正式分析。\n\n對象與背景資料：\n【貼上】"},
+{c:"okr",d:"制定目標與關鍵結果",p:"制定 OKR。\n期間：【填寫】｜方向：【填寫】｜可用資源：【填寫】\n輸出 1 個 Objective ＋ 3 個 Key Results。每個 KR 必須可量化，並標明衡量方式與資料來源。"},
+{c:"brainstorm",d:"提供十個創意點子",p:"針對以下問題提供 10 個做法。\n問題：【填寫】｜限制條件（預算、時間、人力）：【填寫】\n每個做法標註：所需資源、最快多久看到結果、最大風險。\n請包含至少 3 個低成本方案。"},
+{c:"problem_solve",d:"給出問題解決方案",p:"分析以下問題並提出解法。\n步驟：先重述你理解的問題、列出已知與未知、提出 3 個解法並比較、推薦其中一個並說明取捨。\n未知資訊請明確列出，不要自行假設。\n\n問題描述：\n【貼上】"},
+{c:"sop",d:"產出標準作業流程",p:"撰寫標準作業流程。\n作業名稱：【填寫】｜執行者：【填寫】\n輸出：適用範圍、前置條件、逐步操作（含判斷點）、常見錯誤與處理、驗收標準，並附一份 Mermaid flowchart。\n\n現行做法：\n【貼上】"},
+{c:"budget_plan",d:"規劃預算分配比例",p:"規劃預算分配。\n總預算：【填寫】｜期間：【填寫】｜必要支出項目：【填寫】\n輸出表格：項目、金額、占比、依據、可壓縮空間。\n所有金額加總必須等於總預算，請附上驗算。"},
+{c:"vendor_brief",d:"寫外包廠商需求書",p:"撰寫外包需求書。\n需求：【填寫】｜預算範圍：【填寫】｜期限：【填寫】\n內容包含：背景、工作範圍、明確的交付項目、驗收標準、里程碑、付款條件、範圍外事項。\n驗收標準必須可客觀判定。"}
+]},
+{g:"數據分析與表格處理",items:[
+{c:"excel_formula",d:"寫出指定 Excel 公式",p:"寫一個 Excel 公式。\n我要達成：【填寫】｜資料所在欄位與範圍：【填寫】｜Excel 版本：【填寫】\n輸出：公式、逐段說明、一組測試資料與預期結果、可能出錯的情況。\n若功能與版本相關（如 XLOOKUP、LET），請先說明版本需求。"},
+{c:"vba",d:"生成常用巨集程式碼",p:"寫一段 VBA 巨集。\n目的：【填寫】｜作用範圍（工作表或活頁簿）：【填寫】\n要求：包含錯誤處理、執行時不覆寫原始資料（輸出到新工作表或另存新檔）、附上使用步驟。\n請標明程式碼尚未實際執行驗證。"},
+{c:"clean_data",d:"清理不符格式資料",p:"檢查以下資料的格式問題。\n輸出：發現的問題類型與所在列、建議的清理規則、清理後結果。\n無法判定正確值的資料標為「待人工確認」，不要自行填補。\n\n資料：\n【貼上】"},
+{c:"pivot",d:"給樞紐分析操作建議",p:"給我樞紐分析的操作建議。\n資料欄位：【填寫】｜我想回答的問題：【填寫】\n輸出：列／欄／值／篩選各放什麼欄位、值的彙總方式、操作步驟、可能的陷阱（空白值、重複計算、日期格式）。"},
+{c:"sql",d:"撰寫基本數據查詢句",p:"寫一段 SQL 查詢。\n資料庫類型與版本：【填寫】｜資料表與欄位：【填寫】｜要查的問題：【填寫】\n輸出：查詢語法、逐段說明、驗證用的小型測試查詢。\n不要使用我沒有提供的資料表或欄位。"},
+{c:"chart_type",d:"推薦最佳圖表類型",p:"推薦適合的圖表類型。\n資料內容：【填寫】｜想強調的重點：【填寫】｜閱讀對象：【填寫】\n輸出：推薦圖表與理由、不建議的圖表與原因、製作時的注意事項（軸範圍、色彩、標籤）。"},
+{c:"stat_summary",d:"快速計算數據敘述",p:"計算以下數據的敘述統計。\n輸出：筆數、平均、中位數、最大最小、標準差、四分位數。\n請附上使用的公式，並說明缺失值如何處理。\n\n數據：\n【貼上】"},
+{c:"trend",d:"預測未來的數據走向",p:"分析以下數據的走向。\n輸出：目前趨勢描述、變化幅度、若做外推的假設條件與結果區間。\n明確標示外推為推測，並說明在什麼情況下會失準。\n\n數據（含時間欄位）：\n【貼上】"},
+{c:"roi",d:"計算投資報酬率公式",p:"計算投資報酬率。\n投入成本（逐項）：【填寫】｜預期收益（逐項與時間）：【填寫】｜評估期間：【填寫】\n輸出：計算式與結果、回本時間、敏感度分析（收益 ±20% 時的結果）。\n請列出所有假設。"},
+{c:"kpi_formula",d:"設計績效指標公式",p:"設計績效指標公式。\n要衡量的目標：【填寫】｜可取得的資料來源：【填寫】\n輸出表格：指標名稱、計算公式、資料來源、統計週期、可能被扭曲的行為。"}
+]},
+{g:"人資與行政效率",items:[
+{c:"jd",d:"撰寫職缺招募描述",p:"撰寫職缺說明。\n職稱：【填寫】｜團隊與匯報對象：【填寫】｜主要工作：【填寫】｜必要條件：【填寫】\n區分「必要條件」與「加分條件」，工作內容用實際任務描述，不要用空泛形容詞。不要編造薪資或福利。"},
+{c:"interview_q",d:"產出面試問題清單",p:"產出面試問題清單。\n職缺：【填寫】｜想驗證的能力：【填寫】\n每題標註：想測什麼、好答案的特徵、追問方向。\n包含至少 3 題情境題與 2 題實作題。"},
+{c:"onboard",d:"擬定新進員工流程",p:"擬定新人到職流程。\n職務：【填寫】｜到職日：【填寫】\n輸出：報到前準備、第 1 天、第 1 週、第 1 個月，各階段的負責人與完成判準。\n標出需要跨部門配合的項目。"},
+{c:"policy",d:"撰寫公司內部規範",p:"撰寫內部規範。\n規範主題：【填寫】｜適用對象：【填寫】｜現有做法：【填寫】\n結構：目的、適用範圍、定義、規定事項、例外處理、違反時的處理、生效日。\n不要引用我沒提供的法規條文，需要查證處請標示。"},
+{c:"performance",d:"撰寫績效考評評語",p:"撰寫績效評語。\n對象職務：【填寫】｜本期具體事實（做了什麼、結果如何）：【填寫】\n每段評語必須對應我提供的具體事實。\n沒有事實支持的優點或缺點一律不寫，改列為「本期無足夠觀察資料」。"},
+{c:"survey",d:"設計滿意度調查表",p:"設計滿意度調查表。\n調查對象：【填寫】｜想知道的事：【填寫】\n輸出 10–15 題，標註題型（量表／單選／開放）。\n避免誘導性題目，並說明每題對應的分析用途。"},
+{c:"announcement",d:"撰寫全公司公告文",p:"撰寫全公司公告。\n事項：【填寫】｜生效日：【填寫】｜受影響對象：【填寫】｜聯絡窗口：【填寫】\n結構：一句話結論、變更內容、對誰有影響、要做什麼、何時前完成、有問題找誰。全文 300 字內。"},
+{c:"reimburse",d:"整理報帳注意事項",p:"整理報帳注意事項。\n輸出：可報項目、必備單據、申請期限、常見退件原因、逐步流程。\n規定未涵蓋的情況標示「規定未載明，需洽權責單位」。\n\n公司規定：\n【貼上】"},
+{c:"training_plan",d:"規劃內訓課程大綱",p:"規劃內訓課程大綱。\n主題：【填寫】｜對象與現有程度：【填寫】｜總時數：【填寫】\n輸出：學習目標、各單元時間分配、教學方式、練習設計、評量方式。"},
+{c:"exit_interview",d:"整理離職面談題庫",p:"整理離職面談題庫。\n職務類型：【填寫】｜想了解的重點：【填寫】\n輸出 12 題，分為工作內容、管理與團隊、制度與資源、去留因素四組。\n避免會讓受訪者防衛的問法，並標註每題的分析用途。"}
+]},
+{g:"客服與業務銷售",items:[
+{c:"objection_kill",d:"列客訴與應對話術",p:"列出常見客訴與應對話術。\n產品或服務：【填寫】｜已知的客訴類型：【填寫】\n輸出表格：客訴內容、對方真正在意的點、回應話術、不能說的話。\n話術中不得承諾我沒有提供的補償或條件。"},
+{c:"faq",d:"生成常見問題解答",p:"根據以下資料產出 FAQ，15 題並依主題分組。\n答案只能來自我提供的資料；資料未涵蓋的常見問題另列一區「需補充資訊」。\n\n資料：\n【貼上】"},
+{c:"sales_script",d:"寫電銷開發話術稿",p:"寫一份電話開發話術。\n產品：【填寫】｜對象：【填寫】｜通話目標：【填寫】\n輸出：開場 20 秒、需求確認提問、價值說明、三種常見拒絕的回應、收尾。\n不得使用誇大或無法證實的宣稱。"},
+{c:"offer_design",d:"包裝不可拒絕方案",p:"設計方案包裝。\n產品與成本：【填寫】｜客戶最在意的：【填寫】｜可提供的加值項目：【填寫】\n輸出 3 個方案（基本／標準／進階）：內容、價格邏輯、適合的客戶、對毛利的影響。"},
+{c:"upsell",d:"設計加價購策略建議",p:"設計加價購策略。\n主商品：【填寫】｜可搭配的商品與成本：【填寫】｜客戶購買情境：【填寫】\n輸出：建議組合、加價幅度與理由、提出時機、不建議搭配的組合與原因。"},
+{c:"quote",d:"製作專業報價單架構",p:"設計報價單架構。\n報價項目：【填寫】｜計價方式：【填寫】｜有效期限：【填寫】\n輸出欄位設計＋一份空白範例，包含：項目、規格、數量、單價、小計、稅、總計、報價條件、不含項目。\n金額欄位留空由我填入，不要代填。"},
+{c:"client_research",d:"快速背景調查客戶",p:"整理以下客戶的背景資訊。\n客戶名稱與已知資料：【填寫】\n輸出：公司基本資料、業務範圍、近期公開動態、可能的需求、洽談切入點。\n每項標註資料來源；查不到的寫「查無公開資料」。"},
+{c:"review_reply",d:"生成商家好評回覆",p:"撰寫評論回覆。\n評分：【填寫】｜可提供的補救：【填寫】\n語氣具體不制式，針對評論提到的細節回應。負評回覆不要辯解，也不要承諾我沒授權的補償。\n\n評論內容：\n【貼上】"},
+{c:"complaint",d:"撰寫安撫客訴郵件",p:"撰寫客訴回覆信。\n已查明的事實：【填寫】｜可提供的處理方式：【填寫】\n結構：確認收到、說明已查明的事實、處理方式與時間、後續聯絡窗口。\n未查明的部分寫「仍在確認中」，不要給不確定的結論。\n\n客訴事由：\n【貼上】"},
+{c:"lead_gen",d:"設計名單收集表單",p:"設計名單收集表單。\n目的：【填寫】｜後續會如何使用名單：【填寫】\n輸出：欄位清單（標註必填／選填）、每個欄位的用途、隱私聲明要點、降低填寫阻力的建議。\n欄位控制在 5 個以內並說明取捨。"}
+]},
+{g:"邏輯思考與決策",items:[
+{c:"5whys",d:"深度根因分析提問",p:"用 5 Whys 分析以下問題。\n問題現象：【填寫】｜已知事實：【填寫】\n每一層必須說明「這個原因是根據哪項事實推出的」。\n無法用現有事實支持的層級請停下，並列出需要查證什麼。"},
+{c:"decision_matrix",d:"製作決策矩陣評分",p:"製作決策矩陣。\n選項：【填寫】｜評估準則：【填寫】｜各準則的重要性：【填寫】\n輸出加權評分表，並附上每個評分的理由。\n最後說明：若改變權重，結論會如何變化。"},
+{c:"pros_and_cons",d:"列出優缺點比較表",p:"列出以下決定的優缺點比較表。\n決定：【填寫】｜背景與限制：【填寫】\n表格欄位：面向、支持的理由、反對的理由、目前資訊是否足夠判斷。",flag:"與 /pros_cons 重疊"},
+{c:"scenario",d:"擬定極端情境模擬",p:"模擬極端情境。\n主題：【填寫】｜目前規劃：【填寫】\n輸出三種情境（最好／最可能／最壞）：觸發條件、發展過程、影響、應對準備。\n說明每種情境的判斷依據；沒有資料支持時不要給機率數字。"},
+{c:"logic_check",d:"檢查邏輯推論漏洞",p:"檢查以下論述的邏輯問題。\n輸出表格：段落、宣稱、支持證據、問題類型（前提不成立／推論跳躍／因果誤判／舉證不足／偷換概念）、修正建議。\n\n論述：\n【貼上】"},
+{c:"first_principles",d:"第一性原理拆解",p:"用第一性原理拆解以下問題。\n問題：【填寫】\n步驟：列出目前做法與其隱含假設、指出哪些是物理或法規的硬限制、哪些只是慣例、從硬限制重新推導可能方案。"},
+{c:"analogy",d:"用白話類比解釋概念",p:"用三個生活化類比解釋以下概念。\n概念：【填寫】｜對象的背景：【填寫】\n每個類比後面補一句「這個類比在哪裡會失準」。"},
+{c:"pre_mortem",d:"事前檢討失敗原因",p:"做事前檢討。\n假設這個計畫在【填寫時間】徹底失敗了，列出 8 個可能的失敗原因。\n每項標註：早期警訊、現在可以做的預防措施、負責監控的人。\n\n計畫：\n【貼上】"},
+{c:"pareto",d:"找出八零二零關鍵",p:"找出關鍵少數。\n輸出：依影響程度排序的項目、累積占比、判定為關鍵的分界點與理由。\n若資料不足以計算占比，直接說明缺什麼資料，不要假設 80/20 成立。\n\n問題與資料：\n【貼上】"},
+{c:"cost_benefit",d:"效益與成本比對",p:"做成本效益比對。\n方案：【填寫】｜可量化成本：【填寫】｜可量化效益：【填寫】｜無法量化的影響：【填寫】\n輸出：量化比較表、無法量化項目另列、淨效益計算式、結論對哪個假設最敏感。"}
+]},
+{g:"學習與技能提升",items:[
+{c:"explain5",d:"像教五歲小孩般解釋",p:"用五歲小孩聽得懂的方式解釋以下概念。\n概念：【填寫】\n限制：不使用專業術語、全文 200 字內、用一個具體的日常例子。\n最後補一段「正式一點的說法」給成人看。"},
+{c:"quiz",d:"生成測驗題檢驗理解",p:"為以下內容出測驗題。\n難度：【填寫】\n出 10 題（6 單選、2 判斷、2 簡答），答案與解析放在最後。\n題目只能考原文有提到的內容。\n\n內容：\n【貼上】"},
+{c:"study_plan",d:"規劃七天學習計畫",p:"規劃七天學習計畫。\n主題：【填寫】｜我目前的程度：【填寫】｜每天可用時間：【填寫】｜學完想達到什麼：【填寫】\n輸出表格：日期、主題、學習內容、練習任務、當天的自我檢核方式。"},
+{c:"book_summary",d:"導讀一本商業好書",p:"導讀一本書。\n書名與作者：【填寫】\n輸出：核心主張、章節脈絡、三個可實際應用的做法、這本書的限制或爭議。\n請標明哪些內容你有把握、哪些需要我對照原書確認。不要虛構書中不存在的章節或引文。"},
+{c:"prompt_improve",d:"優化我的提示詞內容",p:"優化以下提示詞。\n我實際想要的結果：【填寫】\n輸出：改寫後的完整版本、逐項說明改了什麼與原因、還缺哪些資訊會影響品質。\n\n原提示詞：\n【貼上】"},
+{c:"roleplay",d:"陪我演練商務對話",p:"陪我演練商務對話。\n情境：【填寫】｜你扮演的角色與立場：【填寫】｜對方的難處：【填寫】\n規則：一次只說一段，等我回應再繼續，全程維持角色。\n結束後給我回饋：哪裡說得好、哪裡可以改、對方可能的真實反應。"},
+{c:"critique",d:"指點我的文章缺點",p:"指出以下文章的問題。\n寫作目的與讀者：【填寫】\n輸出表格：段落、問題、原因、修改建議。針對文字本身，不評論作者。\n最後給三個最優先修改的地方。\n\n文章：\n【貼上】"},
+{c:"debate",d:"站在反方跟我辯論",p:"站在反方跟我辯論。\n我的主張：【填寫】\n規則：提出最強的反對論點與其依據、指出我的主張中最弱的前提、一次一個論點等我回應。\n不要為了反對而使用錯誤資訊。"},
+{c:"jargon_list",d:"整理業界常用英文",p:"整理業界常用英文。\n產業或領域：【填寫】｜使用場合：【填寫】\n輸出表格：英文、中文、使用情境、例句。\n依使用頻率分為「常見」與「進階」兩組。"},
+{c:"future_trend",d:"研判產業未來發展",p:"分析產業未來發展。\n產業：【填寫】｜關注面向：【填寫】｜時間範圍：【填寫】\n輸出：目前已發生的變化（附來源與時間）、可能的發展方向（標為推測並說明依據）、關鍵不確定因素、應持續觀察的指標。\n不要把預測寫成事實。"}
+]}
+];
+
+const NUM = ["一","二","三","四","五","六","七","八","九","十"];
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const hi  = s => esc(s).replace(/【[^】]+】/g, m => '<span class="ph">'+m+'</span>');
+
+const list = document.getElementById("list");
+const chips = document.getElementById("chips");
+let total = 0;
+
+DATA.forEach((sec, si) => {
+  total += sec.items.length;
+  const el = document.createElement("section");
+  el.id = "sec-"+si;
+  el.dataset.group = sec.g;
+  el.innerHTML =
+    '<div class="sec-head"><span class="sec-num">'+NUM[si]+'</span>'+
+    '<h2 class="sec-title">'+sec.g+'</h2>'+
+    '<span class="sec-count" data-role="cnt">'+sec.items.length+'</span></div>'+
+    '<div class="grid">'+ sec.items.map(it =>
+      '<article class="card'+(it.flag?' flag':'')+'" data-k="'+
+        esc((it.c+" "+it.d+" "+it.p).toLowerCase())+'">'+
+        '<div class="card-top"><span class="cmd"><span class="s">/</span>'+esc(it.c)+'</span>'+
+        '<span class="desc">'+esc(it.d)+'</span>'+
+        (it.flag?'<span class="flag-tag">'+esc(it.flag)+'</span>':'')+'</div>'+
+        '<div class="rule"></div>'+
+        '<pre>'+hi(it.p)+'</pre>'+
+        '<button class="copy" type="button">複製</button>'+
+      '</article>').join("") + '</div>';
+  list.appendChild(el);
+
+  const chip = document.createElement("button");
+  chip.className = "chip"; chip.type = "button";
+  chip.textContent = sec.g; chip.setAttribute("aria-pressed","false");
+  chip.dataset.idx = si;
+  chips.appendChild(chip);
+});
+
+const allChip = document.createElement("button");
+allChip.className = "chip"; allChip.type = "button";
+allChip.textContent = "全部"; allChip.setAttribute("aria-pressed","true");
+allChip.dataset.idx = "all";
+chips.insertBefore(allChip, chips.firstChild);
+
+/* ---- copy ---- */
+list.addEventListener("click", e => {
+  const btn = e.target.closest(".copy");
+  if (!btn) return;
+  const text = btn.closest(".card").querySelector("pre").innerText;
+  const done = ok => {
+    btn.textContent = ok ? "已複製" : "複製失敗，請手動選取";
+    btn.classList.add(ok ? "done" : "fail");
+    setTimeout(() => { btn.textContent = "複製"; btn.classList.remove("done","fail"); }, 1800);
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => done(true)).catch(() => done(fallback(text)));
+  } else {
+    done(fallback(text));
+  }
+});
+function fallback(text){
+  try{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.cssText = "position:fixed;top:-9999px;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  }catch(_){ return false; }
+}
+
+/* ---- filter ---- */
+const q = document.getElementById("q");
+const count = document.getElementById("count");
+const empty = document.getElementById("empty");
+let activeCat = "all";
+
+function apply(){
+  const term = q.value.trim().toLowerCase().replace(/^\//,"");
+  let shown = 0;
+  document.querySelectorAll("section").forEach((sec, si) => {
+    const catOk = (activeCat === "all" || String(si) === activeCat);
+    let n = 0;
+    sec.querySelectorAll(".card").forEach(card => {
+      const ok = catOk && (!term || card.dataset.k.includes(term));
+      card.style.display = ok ? "" : "none";
+      if (ok) n++;
+    });
+    sec.style.display = n ? "" : "none";
+    sec.querySelector('[data-role="cnt"]').textContent = n;
+    shown += n;
+  });
+  count.textContent = shown + " / " + total;
+  empty.classList.toggle("on", shown === 0);
+}
+
+q.addEventListener("input", apply);
+chips.addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  activeCat = chip.dataset.idx;
+  [...chips.children].forEach(c => c.setAttribute("aria-pressed", c === chip ? "true" : "false"));
+  apply();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  if (e.key === "Escape" && document.activeElement === q) { q.value = ""; apply(); q.blur(); }
+});
+apply();
+</script>
+</body>
+</html>
